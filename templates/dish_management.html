@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block title %}dish_management{% endblock %}
+
+{% block dish_management_active %}active{% endblock %}
+
+{% block content %}
+
+<div class="p-5 mb-4 bg-light rounded-3" style="text-align:center" >
+  <h3>搜索菜品</h3>
+  <div class="form-input-wrap f-l" style="display:inline">
+      <form method="post" action="/dish_management" >
+        <input type="text" class="form-control" id="Dname_search" name="Dname_search" placeholder="请输入关键字">
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-outline-secondary" >搜索</button>
+          </div>
+      </form>
+  </div>
+</div>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userModal">
+  添加菜品
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="/form_add_dish">
+        <div class="modal-header">
+          <h5 class="modal-title" id="userModalLabel">添加菜品</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="Dname" class="form-label">菜品名</label>
+            <input type="text" class="form-control" id="Dname" name="Dname" placeholder="菜品名">
+          </div>
+          <div class="mb-3">
+            <label for="Dprice" class="form-label">菜品价格</label>
+            <input type="text" class="form-control" id="Dprice" name="Dprice" placeholder="菜品价格">
+          </div>
+          <div class="mb-3">
+            <label for="Dpicture" class="form-label">图片路径</label>
+            <input type="text" class="form-control" id="Dpicture" name="Dpicture" placeholder="图片路径">
+          </div>
+          <div class="mb-3">
+            <label for="Wname" class="form-label">所属窗口名称</label>
+            <input type="text" class="form-control" id="Wname" name="Wname" placeholder="所属窗口名称">
+          </div>
+          <div class="mb-3">
+            <label for="Cname" class="form-label">所属食堂名称</label>
+            <input type="text" class="form-control" id="Cname" name="Cname" placeholder="所属食堂名称">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+          <button type="submit" class="btn btn-primary">添加</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">菜品序号</th>
+      <th scope="col">菜品名</th>
+      <th scope="col">菜品价格</th>
+      <th scope="col">是否有售</th>
+      <th scope="col">所属窗口</th>
+      <th scope="col">所属食堂</th>
+      <th scope="col">管理标签</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for dish in dishes %}
+    <tr style="vertical-align: middle;">
+      <th scope="row">{{ loop.index1 }}</th>
+      <td>{{ dish.D_ }}</td>
+      <td>{{ dish.Dname }}</td>
+      <td>{{ dish.Dprice }}</td>
+      <td>{{ dish.is_sell }}</td>
+      <td>{{ dish.Wname }}</td>
+      <td>{{ dish.Cname }}</td>
+      <td>
+        <button type="button" class="btn btn-primary" onclick="window.location.href='/dish_tag/{{dish.D_}}'">管理标签</button>
+      </td>
+      <td>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dishModal_update{{dish.D_}}">
+          修改
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="dishModal_update{{dish.D_}}" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <form method="post" action="/update_dish">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="userModalLabel">修改</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <label for="Dname" class="form-label">菜品名</label>
+                    <input type="text" class="form-control" id="Dname" name="Dname" placeholder="菜品名" value="{{dish.Dname}}">
+                  </div>
+                  <div class="mb-3">
+                    <label for="Dprice" class="form-label">菜品价格</label>
+                    <input type="text" class="form-control" id="Dprice" name="Dprice" placeholder="菜品价格" value="{{dish.Dprice}}">
+                  </div>
+                  <div class="mb-3">
+                    <label for="Dpicture" class="form-label">图片路径</label>
+                    <input type="text" class="form-control" id="Dpicture" name="Dpicture" placeholder="图片路径" value="{{dish.Dpicture}}">
+                  </div>
+                  <div class="mb-3">
+                    <label for="Wname" class="form-label">所属窗口名称</label>
+                    <input type="text" class="form-control" id="Wname" name="Wname" placeholder="所属窗口名称" value="{{dish.Wname}}">
+                  </div>
+                  <div class="mb-3">
+                    <label for="Cname" class="form-label">所属食堂名称</label>
+                    <input type="text" class="form-control" id="Cname" name="Cname" placeholder="所属食堂名称" value="{{dish.Cname}}">
+                  </div>
+                  <div class="mb-3">
+                    <label for="is_sell" class="form-label">是否有售</label>
+                    <input type="text" class="form-control" id="is_sell" name="is_sell" placeholder="所属食堂名称" value="{{dish.is_sell}}">
+                  </div>
+                  <div class="mb-3">
+                    <input type="hidden" class="form-control" id="D_" name="D_" placeholder="D_" value="{{dish.D_}}">
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                  <button type="submit" class="btn btn-primary">修改</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </td>
+      <td>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dishModal_{{dish.D_}}">
+          删除
+        </button>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="dishModal_{{dish.D_}}" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <form method="post" action="/delete_dish">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="userModalLabel">是否删除</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                  <div class="mb-3">
+                    <input type="hidden" class="form-control" id="D_" name="D_" placeholder="D_" value="{{dish.D_}}">
+                  </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                  <button type="submit" class="btn btn-primary">删除</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% if exists("pagination") %}
+<ul class="pagination">
+  {% if existsIn(pagination, "previous") %}
+  <li class="page-item">
+    <a class="page-link" href="/dish_management/{{ pagination.previous }}" aria-label="Previous">
+      <span aria-hidden="true">&laquo;</span>
+    </a>
+  </li>
+  {% else %}
+  <li class="page-item disabled">
+    <a class="page-link" href="#" aria-label="Previous">
+      <span aria-hidden="true">&laquo;</span>
+    </a>
+  </li>
+  {% endif %}
+  {% if existsIn(pagination, "left_ellipsis") %}
+  <li class="page-item"><a class="page-link" href="/dish_management/1">1</a></li>
+  <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+  {% endif %}
+  {% for page in pagination.pages_left %}
+  <li class="page-item"><a class="page-link" href="/dish_management/{{ page }}">{{ page }}</a></li>
+  {% endfor %}
+  <li class="page-item active" aria-current="page"><a class="page-link" href="/dish_management/{{ pagination.current }}">{{ pagination.current }}</a></li>
+  {% for page in pagination.pages_right %}
+  <li class="page-item"><a class="page-link" href="/dish_management/{{ page }}">{{ page }}</a></li>
+  {% endfor %}
+  {% if existsIn(pagination, "right_ellipsis") %}
+  <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+  <li class="page-item"><a class="page-link" href="/dish_management/{{ pagination.total }}">{{ pagination.total }}</a></li>
+  {% endif %}
+  {% if existsIn(pagination, "next") %}
+  <li class="page-item">
+    <a class="page-link" href="/dish_management/{{ pagination.next }}" aria-label="Next">
+      <span aria-hidden="true">&raquo;</span>
+    </a>
+  </li>
+  {% else %}
+  <li class="page-item disabled">
+    <a class="page-link" href="#" aria-label="Next">
+      <span aria-hidden="true">&raquo;</span>
+    </a>
+  </li>
+  {% endif %}
+</ul>
+{% endif %}
+{% endblock %}

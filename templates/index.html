@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block home_active %}active{% endblock %}
+
+{% block content %}
+
+
+
+{% for canteen in canteens %}
+<!-- <script>
+  var url;
+
+  url = window.location.pathname; /* 获取文件路径（文件地址） */
+  url = url + {{canteen.C_}};
+  document.write('<a class="nav-link" href=" '+url+' " >{{ canteen.Cname }}</a>')
+
+  
+</script>   -->
+
+
+<div class="p-5 mb-4 bg-light rounded-3">
+  <a href="/{{canteen.C_}}/0/0/manu">
+    <div style="text-align: center;"><img src='/statics/images{{canteen.Cpicture}}.jpg' width="750" height="300" /></div>
+  </a>
+    <!-- <li><img src='/statics/images/canteen_3.jpg' width="240" height="180" /></li> -->
+    <h2 style="text-align: center;">{{ canteen.Cname }}</h>
+</div>
+{% endfor %}
+
+
+<!-- <div class="p-5 mb-4 bg-light rounded-3">
+  <div class="container-fluid py-5">
+    <li><img src='/statics/images/nanshi.jpg' width="750" height="300" /></li>
+    <h2 class="display-5 fw-bold">南食</h1>
+    <a class="nav-link" href="/user">User</a>
+  </div>
+</div>
+<div class="p-5 mb-4 bg-light rounded-3">
+  <div class="container-fluid py-5">
+    <li><img src='/statics/images/nanshi.jpg' width="750" height="300" /></li>
+    <h2 class="display-5 fw-bold">北食</h1>
+  </div>
+</div> -->
+
+{% endblock %}

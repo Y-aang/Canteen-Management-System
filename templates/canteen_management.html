@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block title %}canteen_management{% endblock %}
+
+{% block canteen_management_active %}active{% endblock %}
+
+{% block content %}
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userModal">
+  添加餐厅
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="/form_add_canteen">
+        <div class="modal-header">
+          <h5 class="modal-title" id="userModalLabel">添加餐厅</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="C_" class="form-label">餐厅序号</label>
+            <input type="text" class="form-control" id="Cname" name="C_" placeholder="餐厅序号">
+          </div>
+          <div class="mb-3">
+            <label for="Cname" class="form-label">餐厅名称</label>
+            <input type="text" class="form-control" id="Cname" name="Cname" placeholder="餐厅名称">
+          </div>
+          <div class="mb-3">
+            <label for="Cpicture" class="form-label">图片路径</label>
+            <input type="text" class="form-control" id="Cpicture" name="Cpicture" placeholder="图片路径">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+          <button type="submit" class="btn btn-primary">添加</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">餐厅序号</th>
+      <th scope="col">餐厅名称</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for canteen in canteens %}
+    <tr style="vertical-align: middle;">
+      <th scope="row">{{ loop.index1 }}</th>
+      <td>{{ canteen.C_ }}</td>
+      <td>{{ canteen.Cname }}</td>
+      <td>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#canteenModal_update_{{canteen.C_}}">
+          修改
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="canteenModal_update_{{canteen.C_}}" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <form method="post" action="/update_canteen">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="userModalLabel">修改</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <label for="C_" class="form-label">餐厅序号</label>
+                    <input type="text" class="form-control" id="Cname" name="C_" placeholder="餐厅序号" value="{{canteen.C_}}">
+                  </div>
+                  <div class="mb-3">
+                    <label for="Cname" class="form-label">餐厅名称</label>
+                    <input type="text" class="form-control" id="Cname" name="Cname" placeholder="餐厅名称" value="{{canteen.Cname}}">
+                  </div>
+                  <div class="mb-3">
+                    <label for="Cpicture" class="form-label">图片路径</label>
+                    <input type="text" class="form-control" id="Cpicture" name="Cpicture" placeholder="图片路径" value="{{canteen.Cpicture}}">
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                  <button type="submit" class="btn btn-primary">修改</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </td>
+      <td>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#canteenModal_{{canteen.C_}}">
+          删除
+        </button>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="canteenModal_{{canteen.C_}}" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <form method="post" action="/delete_canteen">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="userModalLabel">是否删除</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- <div class="modal-body"> -->
+                  <div class="mb-3">
+                    <div>序号为{{canteen.C_}}的餐厅</div> 
+                    <input type="hidden" class="form-control" id="C_" name="C_" placeholder="C_" value="{{canteen.C_}}">
+                  </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                  <button type="submit" class="btn btn-primary">删除</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </td>
+      <!-- Button trigger modal -->
+      
+
+
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% if exists("pagination") %}
+<ul class="pagination">
+  {% if existsIn(pagination, "previous") %}
+  <li class="page-item">
+    <a class="page-link" href="/canteen_management/{{ pagination.previous }}" aria-label="Previous">
+      <span aria-hidden="true">&laquo;</span>
+    </a>
+  </li>
+  {% else %}
+  <li class="page-item disabled">
+    <a class="page-link" href="#" aria-label="Previous">
+      <span aria-hidden="true">&laquo;</span>
+    </a>
+  </li>
+  {% endif %}
+  {% if existsIn(pagination, "left_ellipsis") %}
+  <li class="page-item"><a class="page-link" href="/canteen_management/1">1</a></li>
+  <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+  {% endif %}
+  {% for page in pagination.pages_left %}
+  <li class="page-item"><a class="page-link" href="/canteen_management/{{ page }}">{{ page }}</a></li>
+  {% endfor %}
+  <li class="page-item active" aria-current="page"><a class="page-link" href="/canteen_management/{{ pagination.current }}">{{ pagination.current }}</a></li>
+  {% for page in pagination.pages_right %}
+  <li class="page-item"><a class="page-link" href="/canteen_management/{{ page }}">{{ page }}</a></li>
+  {% endfor %}
+  {% if existsIn(pagination, "right_ellipsis") %}
+  <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+  <li class="page-item"><a class="page-link" href="/canteen_management/{{ pagination.total }}">{{ pagination.total }}</a></li>
+  {% endif %}
+  {% if existsIn(pagination, "next") %}
+  <li class="page-item">
+    <a class="page-link" href="/canteen_management/{{ pagination.next }}" aria-label="Next">
+      <span aria-hidden="true">&raquo;</span>
+    </a>
+  </li>
+  {% else %}
+  <li class="page-item disabled">
+    <a class="page-link" href="#" aria-label="Next">
+      <span aria-hidden="true">&raquo;</span>
+    </a>
+  </li>
+  {% endif %}
+</ul>
+{% endif %}
+{% endblock %}

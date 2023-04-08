@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block title %}window_management{% endblock %}
+
+{% block window_management_active %}active{% endblock %}
+
+{% block content %}
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userModal">
+  添加窗口
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="/form_add_window">
+        <div class="modal-header">
+          <h5 class="modal-title" id="userModalLabel">添加窗口</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="Wname" class="form-label">窗口名称</label>
+            <input type="text" class="form-control" id="Wname" name="Wname" placeholder="窗口名称">
+          </div>
+          <div class="mb-3">
+            <label for="Wlocation" class="form-label">窗口地点</label>
+            <input type="text" class="form-control" id="Wlocation" name="Wlocation" placeholder="窗口地点">
+          </div>
+          <div class="mb-3">
+            <label for="Cname" class="form-label">所属食堂名称</label>
+            <input type="text" class="form-control" id="Cname" name="Cname" placeholder="所属食堂名称">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+          <button type="submit" class="btn btn-primary">添加</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">窗口序号</th>
+      <th scope="col">窗口名称</th>
+      <th scope="col">窗口地点</th>
+      <th scope="col">所属食堂</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for window in windows %}
+    <tr style="vertical-align: middle;">
+      <th scope="row">{{ loop.index1 }}</th>
+      <td>{{ window.W_ }}</td>
+      <td>{{ window.Wname }}</td>
+      <td>{{ window.Wlocation }}</td>
+      <td>{{ window.Cname }}</td>
+      <td>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#windowModal_update_{{window.W_}}">
+          修改
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="windowModal_update_{{window.W_}}" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <form method="post" action="/update_window">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="userModalLabel">修改</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <label for="Wname" class="form-label">窗口名称</label>
+                    <input type="text" class="form-control" id="Wname" name="Wname" placeholder="窗口名称" value="{{window.Wname}}">
+                  </div>
+                  <div class="mb-3">
+                    <label for="Wlocation" class="form-label">窗口地点</label>
+                    <input type="text" class="form-control" id="Wlocation" name="Wlocation" placeholder="窗口地点" value="{{window.Wlocation}}">
+                  </div>
+                  <div class="mb-3">
+                    <label for="Cname" class="form-label">所属食堂名称</label>
+                    <input type="text" class="form-control" id="Cname" name="Cname" placeholder="所属食堂名称" value="{{window.Cname}}">
+                  </div>
+                  <div class="mb-3">
+                    <input type="hidden" class="form-control" id="W_" name="W_" placeholder="W_" value="{{window.W_}}">
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                  <button type="submit" class="btn btn-primary">修改</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </td>
+      <td>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#windowModal_{{window.W_}}">
+          删除
+        </button>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="windowModal_{{window.W_}}" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <form method="post" action="/delete_window">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="userModalLabel">是否删除</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- <div class="modal-body"> -->
+                  <div class="mb-3">
+                    <div>序号为{{window.W_}}的窗口</div> 
+                    <input type="hidden" class="form-control" id="W_" name="W_" placeholder="W_" value="{{window.W_}}">
+                  </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                  <button type="submit" class="btn btn-primary">删除</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% if exists("pagination") %}
+<ul class="pagination">
+  {% if existsIn(pagination, "previous") %}
+  <li class="page-item">
+    <a class="page-link" href="/window_management/{{ pagination.previous }}" aria-label="Previous">
+      <span aria-hidden="true">&laquo;</span>
+    </a>
+  </li>
+  {% else %}
+  <li class="page-item disabled">
+    <a class="page-link" href="#" aria-label="Previous">
+      <span aria-hidden="true">&laquo;</span>
+    </a>
+  </li>
+  {% endif %}
+  {% if existsIn(pagination, "left_ellipsis") %}
+  <li class="page-item"><a class="page-link" href="/window_management/1">1</a></li>
+  <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+  {% endif %}
+  {% for page in pagination.pages_left %}
+  <li class="page-item"><a class="page-link" href="/window_management/{{ page }}">{{ page }}</a></li>
+  {% endfor %}
+  <li class="page-item active" aria-current="page"><a class="page-link" href="/window_management/{{ pagination.current }}">{{ pagination.current }}</a></li>
+  {% for page in pagination.pages_right %}
+  <li class="page-item"><a class="page-link" href="/window_management/{{ page }}">{{ page }}</a></li>
+  {% endfor %}
+  {% if existsIn(pagination, "right_ellipsis") %}
+  <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+  <li class="page-item"><a class="page-link" href="/window_management/{{ pagination.total }}">{{ pagination.total }}</a></li>
+  {% endif %}
+  {% if existsIn(pagination, "next") %}
+  <li class="page-item">
+    <a class="page-link" href="/window_management/{{ pagination.next }}" aria-label="Next">
+      <span aria-hidden="true">&raquo;</span>
+    </a>
+  </li>
+  {% else %}
+  <li class="page-item disabled">
+    <a class="page-link" href="#" aria-label="Next">
+      <span aria-hidden="true">&raquo;</span>
+    </a>
+  </li>
+  {% endif %}
+</ul>
+{% endif %}
+{% endblock %}
